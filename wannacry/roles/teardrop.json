@@ -1,0 +1,26 @@
+{
+    "name": "teardrop",
+    "description": "Checks for vulnerability to WannaCry",
+    "chef_type": "role",
+    "json_class": "Chef::Role",
+    "default_attributes": {
+      "audit": {
+	    "reporter": "chef-server-automate",
+	      "profiles": [{
+          "name": "wannacry",
+          "url": "https://github.com/adamleff/inspec-profile-wannacry-exploit/archive/0.2.0.zip"
+        }]
+      },
+      "chef-client": {
+	      "task": {
+		      "interval": 60,
+		      "splay": 2
+	      }
+      }
+    },
+    "override_attributes": {
+    },
+    "run_list": [
+        "recipe[audit::default]"
+    ]
+}
