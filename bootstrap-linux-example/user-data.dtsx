@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "[CHEF_IP] chef.automate-demo.com chef" | tee --append /etc/hosts
