@@ -1,0 +1,34 @@
+<powershell>
+  Add-Content c:\Windows\system32\drivers\etc\hosts "`n[CHEF_IP] chef.automate-demo.com chef"
+  Add-Content c:\Windows\system32\drivers\etc\hosts "`n[AUTOMATE_IP] automate.automate-demo.com automate"
+  #https://gist.github.com/vinyar/6735863
+ # below two commands are known to fail for arbitrary reasons
+  try { winrm quickconfig -q }
+  catch {write-host "winrm quickconfig failed"}
+  try { Enable-PSRemoting -force}
+  catch {write-host "Enable-PSRemoting -force failed"}
+  write-host 'setting up WinRm';
+  winrm set winrm/config '@{MaxTimeoutms="1800000"}';
+  winrm set winrm/config/client/auth '@{Basic="true"}';            # per https://github.com/WinRb/WinRM
+  winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}';
+  winrm set winrm/config/service '@{AllowUnencrypted="true"}';     # per https://github.com/WinRb/WinRM
+  winrm set winrm/config/service/auth '@{Basic="true"}';           # per https://github.com/WinRb/WinRM
+  # needed for windows to manipulate centralized config files which live of a share. Such as AppFabric.
+  winrm set winrm/config/service/auth '@{CredSSP="true"}';
+  write-host 'Adding custom firewall rule for 5985 and 5986';
+  netsh advfirewall firewall add rule name="Windows Remote Management (HTTP-In)" dir=in action=allow enable=yes profile=any protocol=tcp localport=5985 remoteip=any;
+  netsh advfirewall firewall add rule name="WinRM HTTPS" protocol=TCP dir=in Localport=5986 remoteport=any action=allow localip=any remoteip=any profile=any enable=yes;
+  # Setting up "Known" user for bootstrapping.
+  write-host 'setting up secedit rule to disable complex passwords';
+  "[System Access]" | out-file c:\delete.cfg;
+  "PasswordComplexity = 0" | out-file c:\delete.cfg -append;
+  "[Version]"  | out-file c:\delete.cfg -append;
+  'signature="$CHICAGO$"'  | out-file c:\delete.cfg -append;
+  write-host 'changing secedit policy';
+  secedit /configure /db C:\Windows\security\new.sdb /cfg c:\delete.cfg /areas SECURITYPOLICY;
+  # TODO: probably need a better escaping system in the future
+  write-host 'Setting up "Known" user for bootstrapping.';
+  net user /add chef "[CHEF_PASSWORD]" /yes;
+  write-host 'adding user to admins';
+  net localgroup Administrators /add chef;
+</powershell>
