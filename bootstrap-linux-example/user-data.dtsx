@@ -1,3 +1,4 @@
 #!/bin/bash
 
 echo "[CHEF_IP] chef.automate-demo.com chef" | tee --append /etc/hosts
+echo "[AUTOMATE_IP] automate.automate-demo.com automate" | tee --append /etc/hosts

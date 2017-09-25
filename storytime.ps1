@@ -29,14 +29,17 @@ Write-Host "Prepping the infrastructure.  This may take a while"
 berks install
 berks upload --force
 
-
 $environments = @("acceptance-automate-demo-automate-$story-master","union","rehearsal","delivered")
 
 ForEach($environment in $environments) {
-  Start-Job -Name "EC2Create-$environment" {
+  Start-Job -Name "EC2Create-$environment" -ScriptBlock {
+    param($environment, $workingDir)
+    Set-Location $workingDir
+    Write-Host -ForegroundColor green "Creating $environment"
+    knife environment create -d $environment
     Write-Host -ForegroundColor green "Creating $environment instance"
-    ./bootstrap.ps1 -environment environment
-  }
+    .\bootstrap.ps1 -environment $environment
+  } -ArgumentList $environment, $target
 }
 
 git init

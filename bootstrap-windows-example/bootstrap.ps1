@@ -29,7 +29,7 @@ knife ec2 server create `
   --flavor m4.large `
   --ssh-key chef_demo_2x `
   --winrm-transport text `
-  --config ./knife.rb `
+  --config ./knife-aws.rb `
   --user-data ./user-data `
   --winrm-user '.\chef' `
   --winrm-password "$password" `

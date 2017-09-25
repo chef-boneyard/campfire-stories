@@ -1,10 +1,4 @@
-Param([string]$password)
 Param([string]$environment="_default")
-
-if (!$password) {
-  Write-Host "You must specify a password. Ex: ./bootstrap.ps1 my-super-secret-password"
-  exit
-}
 
 Write-Host -ForegroundColor green "Installing knife-ec2 gem"
 chef gem install knife-ec2
@@ -28,7 +22,7 @@ knife ec2 server create `
   --flavor t2.micro `
   --ssh-user ubuntu `
   --ssh-key chef_demo_2x `
-  --config ./knife.rb `
+  --config ./knife-aws.rb `
   --user-data ./user-data `
   --associate-public-ip `
   --run-list "[[RECIPE]]" `
