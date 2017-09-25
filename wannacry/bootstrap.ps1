@@ -1,10 +1,4 @@
-Param([string]$password)
-param([string]$environment="_default")
-
-if (!$password) {
-  Write-Host "You must specify a password. Ex: ./bootstrap.ps1 my-super-secret-password"
-  exit
-}
+Param([string]$password = "workstation-1", [string]$environment="_default")
 
 Write-Host -ForegroundColor green "Installing knife-ec2 gem"
 chef gem install knife-ec2

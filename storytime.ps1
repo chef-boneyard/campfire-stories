@@ -1,5 +1,6 @@
 Param(
-    [string]$story
+    [string]$story,
+    [string]$password="workstation!"
 )
 
 if( !$story -Or -Not(Test-Path $story)) {
