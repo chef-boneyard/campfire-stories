@@ -1,4 +1,5 @@
 Param([string]$password)
+Param([string]$environment="_default")
 
 if (!$password) {
   Write-Host "You must specify a password. Ex: ./bootstrap.ps1 my-super-secret-password"
@@ -20,18 +21,15 @@ $userdataTemplate = $userdataTemplate.Replace("[AUTOMATE_IP]", "$automate_ip")
 Set-Content -Encoding ASCII "./user-data" $userdataTemplate
 chmod +x "./user-data"
 
-$environments = @("acceptance-automate-demo-automate-[[STORY]]-master","union","rehearsal","delivered")
 
-ForEach($environment in $environments) {
-  Write-Host -ForegroundColor green "Creating $environment instance"
-	knife ec2 server create `
-	--image ami-8803e0f0 `
-	--flavor t2.micro `
-	--ssh-user ubuntu `
-	--ssh-key chef_demo_2x `
-	--config ./knife.rb `
-	--user-data ./user-data `
-	--associate-public-ip `
-	--run-list "[[STORY]]" `
-	--environment $environment
-}
+Write-Host -ForegroundColor green "Creating $environment instance"
+knife ec2 server create `
+  --image ami-8803e0f0 `
+  --flavor t2.micro `
+  --ssh-user ubuntu `
+  --ssh-key chef_demo_2x `
+  --config ./knife.rb `
+  --user-data ./user-data `
+  --associate-public-ip `
+  --run-list "[[RECIPE]]" `
+  --environment $environment

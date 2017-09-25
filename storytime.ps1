@@ -28,7 +28,16 @@ Push-Location $target
 Write-Host "Prepping the infrastructure.  This may take a while"
 berks install
 berks upload --force
-./bootstrap.ps1
+
+
+$environments = @("acceptance-automate-demo-automate-$story-master","union","rehearsal","delivered")
+
+ForEach($environment in $environments) {
+  Start-Job -Name "EC2Create-$environment" {
+    Write-Host -ForegroundColor green "Creating $environment instance"
+    ./bootstrap.ps1 -environment environment
+  }
+}
 
 git init
 git add .

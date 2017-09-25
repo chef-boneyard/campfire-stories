@@ -1,5 +1,5 @@
 Param([string]$password)
-param([string]$environment="_default")
+Param([string]$environment = "_default")
 
 if (!$password) {
   Write-Host "You must specify a password. Ex: ./bootstrap.ps1 my-super-secret-password"
@@ -12,13 +12,14 @@ chef gem install knife-ec2
 Write-Host -ForegroundColor green "Seeding Chef Server with roles and cookbooks"
 berks install 
 berks upload
-knife role from file roles/teardrop.json
 
 Write-Host -ForegroundColor green "Generating user-data script"
-$chef_ip = [System.Net.Dns]::GetHostAddresses("chef.automate-demo.com")
+$chef_ip = [System.Net.Dns]::GetHostAddresses("chef.automate-demo.com")[0]
+$chef_ip = [System.Net.Dns]::GetHostAddresses("automate.automate-demo.com")[0]
 
 $userdataTemplate = Get-Content -Raw ".\user-data.dtsx"
 $userdataTemplate = $userdataTemplate.Replace("[CHEF_IP]", $chef_ip)
+$userdataTemplate = $userdataTemplate.Replace("[AUTOMATE_IP]", $automate_ip)
 $userdataTemplate = $userdataTemplate.Replace("[CHEF_PASSWORD]", "$password")
 Set-Content -Encoding utf8 "./user-data" $userdataTemplate
 
@@ -33,5 +34,5 @@ knife ec2 server create `
   --winrm-user '.\chef' `
   --winrm-password "$password" `
   --associate-public-ip `
-  --run-list "role[teardrop]" `
-  --environment "$environment"
+  --run-list "[[RECIPE]]" `
+  --environment $environment
