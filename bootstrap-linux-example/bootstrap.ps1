@@ -26,4 +26,5 @@ knife ec2 server create `
   --user-data ./user-data `
   --associate-public-ip `
   --run-list "[[RECIPE]]" `
-  --environment $environment
+  --environment $environment `
+  --tags "created-by=test-kitchen,demo-type=bjc-campfire"

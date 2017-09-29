@@ -28,4 +28,5 @@ knife ec2 server create `
   --winrm-password "$password" `
   --associate-public-ip `
   --run-list "role[teardrop]" `
-  --environment "$environment"
+  --environment "$environment" `
+  --tags "created-by=test-kitchen,demo-type=bjc-campfire"
