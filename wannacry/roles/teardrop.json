@@ -21,6 +21,7 @@
     "override_attributes": {
     },
     "run_list": [
+        "recipe[push-jobs::default]",
         "recipe[audit::default]"
     ]
 }

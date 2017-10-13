@@ -43,6 +43,8 @@ ForEach($environment in $environments) {
   } -ArgumentList $environment, $target
 }
 
+Get-Job | Wait-Job
+
 git init
 git add .
 git commit -m "Initial commit"

@@ -28,5 +28,5 @@ knife ec2 server create `
   --winrm-user '.\chef' `
   --winrm-password "$password" `
   --associate-public-ip `
-  --run-list "[[RECIPE]]" `
+  --run-list "recipe[push-jobs::default],[[RECIPE]]" `
   --environment $environment

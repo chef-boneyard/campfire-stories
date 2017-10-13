@@ -25,5 +25,5 @@ knife ec2 server create `
   --config ./knife-aws.rb `
   --user-data ./user-data `
   --associate-public-ip `
-  --run-list "[[RECIPE]]" `
+  --run-list "recipe[push-jobs::default],[[RECIPE]]" `
   --environment $environment
