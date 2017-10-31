@@ -1,4 +1,4 @@
-Param([string]$password)
+Param([SecureString]$password)
 
 if(!$password) {
   Write-Host "You must specify the same password you provided to bootstrap. Ex: ./remediate.ps1 my-super-secret-password"

@@ -1,4 +1,4 @@
-Param([string]$password = "workstation-1", [string]$environment="_default")
+Param([SecureString]$password = "workstation-1", [string]$environment="_default")
 
 Write-Host -ForegroundColor green "Installing knife-ec2 gem"
 chef gem install knife-ec2
